@@ -9,7 +9,9 @@
             "email": "joost@accentinteractive.nl"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=7.1"
+    },
     "require-dev": {
         "phpunit/phpunit": "^7.5"
     },
