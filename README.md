@@ -42,7 +42,7 @@ $cache->cache('public', 120);
 (new Cache)->cache('public', 120);
 ```
 
-### Caching a specified URL
+### Caching a specific URL
 This can be used for warming the cache, for instance.
 
 ```php
@@ -59,9 +59,10 @@ foreach($uris as $uri) {
 }
 ```
 
-### Exclusing URIs from cache
+### Excluding URIs from cache
+A URI is the request path without the query string. in `https://example.com/foo?bar=baz`, the URI is `/foo`.
 
-A URL will not be cached if it matches any of the URIs set as excluded (In `https://example.com/foo?bar=baz`, the URI is `/foo`). Excluded URIs can contain wildcards. 
+A URL will not be cached if it matches any of the URIs set as excluded. Excluded URIs can contain wildcards. 
 
 In the following example, the URI '/checkout/step/1' would not be cached.
 ```php 
@@ -73,9 +74,9 @@ $excludedUris = [
 ```
 
 ### Excluding query string from cache 
+A query string consists of the paramters added to a URL after the question mark. In `https://example.com/foo?bar=baz`, the query string is `bar=baz`
 
-A query string will not be cached if it matches any of the URIs set as excluded 
-(In `https://example.com/foo?bar=baz`, the query string is `bar=baz`). The excluded URIs can contain wildcards.
+A query string will not be cached if it matches any of the URIs set as excluded. The excluded query strings can contain wildcards.
 
 In the following example, the URL `https://example.com/search?query=foo&page=1&direction=desc` would not be cached. 
 
