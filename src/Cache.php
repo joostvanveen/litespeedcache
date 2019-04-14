@@ -364,6 +364,7 @@ class Cache
     {
         header_remove(self::CONTROL_HEADER);
         header_remove(self::VARY_HEADER);
+        header_remove(self::TAGS_HEADER);
     }
 
     /**
