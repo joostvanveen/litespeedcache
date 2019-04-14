@@ -82,6 +82,19 @@ class CacheTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
+    public function it_does_not_cache_if_bypass_is_in_query_string()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->cache('private', 360, '/test?cache_bypass=1');
+
+        $headers = xdebug_get_headers();
+        $this->assertEquals(0, count($headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_does_not_cache_an_excluded_uri()
     {
         $excludedUrls = [

@@ -264,6 +264,8 @@ class Cache
      */
     public function isInExcludedQueryStrings($string = ''): bool
     {
+        $bypassQueryString = ['*' . $this->bypassCookieName . '=1*'];
+        $this->excludedQueryStrings = array_merge($this->excludedQueryStrings, $bypassQueryString);
         foreach ($this->excludedQueryStrings as $excludedQueryString) {
             if (fnmatch($excludedQueryString, $string)) {
                 return true;
