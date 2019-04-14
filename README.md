@@ -6,6 +6,27 @@ Require the package using composer:
 ```
 composer require joostvanveen/litespeedcache
 ```
+
+Enable the Litespeed in your .htaccess file.
+```
+<IfModule LiteSpeed>
+    # Enable public cache
+    CacheEnable public /
+    
+    # Enable private cache
+    CacheEnable private /
+    
+    # Check the public cache
+    CacheLookup public on
+    
+    # Ignore normal Cache Control headers
+    CacheIgnoreCacheControl On
+    
+    # Maximum expiration time in seconds
+    CacheMaxExpire 604800
+</IfModule>
+``` 
+
 ## Usage
 ### Caching the current URL
 ```php
