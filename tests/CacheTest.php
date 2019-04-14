@@ -17,7 +17,7 @@ class CacheTest extends TestCase
         $cache = (new Cache)->setUnitTestMode()
                             ->cache('private', 360, '/test?foo=bar');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
@@ -30,7 +30,7 @@ class CacheTest extends TestCase
         $cache = (new Cache)->setUnitTestMode()
                             ->purgeCache();
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Purge: *', $headers));
         $this->assertEquals(1, count($headers));
     }
@@ -45,7 +45,7 @@ class CacheTest extends TestCase
                             ->addTags(['articles', 'pages'])
                             ->cache('private', 360, '/test?foo=bar');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
     }
 
@@ -59,7 +59,7 @@ class CacheTest extends TestCase
                             ->addTags('pages')
                             ->cache('private', 360, '/test?foo=bar');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Tag: pages', $headers));
     }
 
@@ -74,7 +74,7 @@ class CacheTest extends TestCase
                             ->addTags($tags)
                             ->purgeTags($tags);
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Purge: tag=articles, tag=pages', $headers));
     }
 
@@ -86,7 +86,7 @@ class CacheTest extends TestCase
     {
         $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
 
-        $this->assertEquals(0, count(xdebug_get_headers()));
+        $this->assertEquals(0, count($this->getHeaders()));
     }
 
     /**
@@ -98,7 +98,7 @@ class CacheTest extends TestCase
         $_SERVER['X-Requested-With'] = 'XMLHttpRequest';
         $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
 
-        $this->assertEquals(0, count(xdebug_get_headers()));
+        $this->assertEquals(0, count($this->getHeaders()));
     }
 
     /**
@@ -116,7 +116,7 @@ class CacheTest extends TestCase
             $_SERVER['REQUEST_METHOD'] = $requestType;
             $cache = (new Cache)->setUnitTestMode()
                                 ->cache('private', 360, '/test?foo=bar');
-            $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', xdebug_get_headers()));
+            $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $this->getHeaders()));
         }
     }
 
@@ -135,7 +135,7 @@ class CacheTest extends TestCase
         foreach ($requestTypes as $requestType) {
             $_SERVER['REQUEST_METHOD'] = $requestType;
             $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
-            $this->assertEquals(0, count(xdebug_get_headers()));
+            $this->assertEquals(0, count($this->getHeaders()));
         }
     }
 
@@ -148,7 +148,7 @@ class CacheTest extends TestCase
         $_COOKIE['cache_bypass'] = 1;
         $cache = (new Cache)->cache('private', 360, '/test');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertEquals(0, count($headers));
     }
 
@@ -161,7 +161,7 @@ class CacheTest extends TestCase
         $cache = (new Cache)->setUnitTestMode()
                             ->cache('private', 360, '/test?cache_bypass=1');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertEquals(0, count($headers));
     }
 
@@ -179,7 +179,7 @@ class CacheTest extends TestCase
                             ->setExcludedUrls($excludedUrls)
                             ->cache('public', 360, '/test?foo=bar');
 
-        $this->assertEmpty(xdebug_get_headers());
+        $this->assertEmpty($this->getHeaders());
     }
 
     /**
@@ -196,7 +196,7 @@ class CacheTest extends TestCase
                             ->setExcludedQueryStrings($excludedQueryString)
                             ->cache('public', 360, '/test?foo=bar');
 
-        $this->assertEmpty(xdebug_get_headers());
+        $this->assertEmpty($this->getHeaders());
     }
 
     /** @test */
@@ -210,7 +210,7 @@ class CacheTest extends TestCase
                             ->disable()
                             ->cache('private', 360, '/test?foo=bar');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
@@ -223,7 +223,7 @@ class CacheTest extends TestCase
         $cache = new Cache;
         $cache->setCacheControlHeader('private', 100);
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertEquals('X-LiteSpeed-Cache-Control: private, max-age=100', $headers[0]);
     }
 
@@ -236,7 +236,7 @@ class CacheTest extends TestCase
         $cache = new Cache;
         $cache->setCacheCookieHeader('mycookie');
 
-        $headers = xdebug_get_headers();
+        $headers = $this->getHeaders();
         $this->assertEquals('X-LiteSpeed-Vary: cookie=mycookie', $headers[0]);
     }
 
@@ -313,5 +313,13 @@ class CacheTest extends TestCase
         $cache->setExcludedQueryStrings($excludedQueryStrings);
 
         $this->assertSame($excludedQueryStrings, $cache->getExcludedQueryStrings());
+    }
+
+    protected function getHeaders () {
+        if (!function_exists('xdebug_get_headers')) {
+            throw new \Exception('function xdebug_get_headers() does not exist. Please activate Xdebug');
+        }
+
+        return xdebug_get_headers();
     }
 }

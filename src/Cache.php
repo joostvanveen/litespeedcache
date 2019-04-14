@@ -304,11 +304,11 @@ class Cache
     }
 
     /**
-     * @param array $excludedUrls
+     * @param array|string $excludedUrls
      */
-    public function setExcludedUrls(array $excludedUrls): Cache
+    public function setExcludedUrls($excludedUrls): Cache
     {
-        $this->excludedUrls = $excludedUrls;
+        $this->excludedUrls = (array) $excludedUrls;
 
         return $this;
     }
@@ -322,13 +322,13 @@ class Cache
     }
 
     /**
-     * @param array $excludedQueryStrings
+     * @param array|string $excludedQueryStrings
      *
      * @return Cache
      */
-    public function setExcludedQueryStrings(array $excludedQueryStrings): Cache
+    public function setExcludedQueryStrings($excludedQueryStrings): Cache
     {
-        $this->excludedQueryStrings = $excludedQueryStrings;
+        $this->excludedQueryStrings = (array) $excludedQueryStrings;
 
         return $this;
     }
