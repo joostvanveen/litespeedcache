@@ -1,0 +1,27 @@
+{
+    "name": "joostvanveen/litespeedcache",
+    "description": "A Litespeed cache library for PHP.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joost van Veen",
+            "email": "joost@accentinteractive.nl"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7.5",
+        "orchestra/testbench": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Joostvanveen\\Litespeedcache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Joostvanveen\\Litespeedcache\\Tests\\": "tests"
+        }
+    }
+}
