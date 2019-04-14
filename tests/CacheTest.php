@@ -82,6 +82,80 @@ class CacheTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
+    public function it_does_not_cache_cli_requests()
+    {
+        $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
+
+        $this->assertEquals(0, count(xdebug_get_headers()));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_cache_ajax_requests()
+    {
+        $_SERVER['X-Requested-With'] = 'XMLHttpRequest';
+        $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
+
+        $this->assertEquals(0, count(xdebug_get_headers()));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_caches_get_and_head_requests()
+    {
+        $requestTypes = [
+            'GET',
+            'HEAD',
+        ];
+
+        foreach ($requestTypes as $requestType) {
+            $_SERVER['REQUEST_METHOD'] = $requestType;
+            $cache = (new Cache)->setUnitTestMode()
+                                ->cache('private', 360, '/test?foo=bar');
+            $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', xdebug_get_headers()));
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_cache_post_put_or_delete_requests()
+    {
+        $requestTypes = [
+            'POST',
+            'PUT',
+            'DELETE',
+        ];
+
+        foreach ($requestTypes as $requestType) {
+            $_SERVER['REQUEST_METHOD'] = $requestType;
+            $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
+            $this->assertEquals(0, count(xdebug_get_headers()));
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_cache_if_bypass_cookie_is_set()
+    {
+        $_COOKIE['cache_bypass'] = 1;
+        $cache = (new Cache)->cache('private', 360, '/test');
+
+        $headers = xdebug_get_headers();
+        $this->assertEquals(0, count($headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_does_not_cache_if_bypass_is_in_query_string()
     {
         $cache = (new Cache)->setUnitTestMode()

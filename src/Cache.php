@@ -128,10 +128,6 @@ class Cache
      */
     public function purgeCache(): Cache
     {
-        if ($this->enabled == false) {
-            return $this;
-        }
-
         $this->clearCachingHeaders();
 
         // Set purge headers
@@ -152,10 +148,6 @@ class Cache
      */
     public function purgeTags($tags): Cache
     {
-        if ($this->enabled == false) {
-            return $this;
-        }
-
         $this->clearCachingHeaders();
 
         $tagString = $this->getTagsString($tags);
@@ -205,24 +197,24 @@ class Cache
      */
     public function shouldCache(): bool
     {
-        // Do not cache CLI requests
-        if ((php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg') && $this->unitTestMode == false) {
-            return false;
-        }
-
         // Do not cache ajax requests
-        if (! empty($_SERVER['X-Requested-With']) && $_SERVER['X-Requested-With'] === 'XMLHttpRequest' && $this->unitTestMode == false) {
+        if (! empty($_SERVER['X-Requested-With']) && $_SERVER['X-Requested-With'] == 'XMLHttpRequest') {
             return false;
         }
 
         // Do not cache any other requests than GET or HEAD requests
         $validMethods = ['GET', 'HEAD'];
-        if ((empty($_SERVER['REQUEST_METHOD']) || ! in_array($_SERVER['REQUEST_METHOD'], $validMethods)) && $this->unitTestMode == false) {
+        if (! empty($_SERVER['REQUEST_METHOD']) && ! preg_grep('/' . $_SERVER['REQUEST_METHOD'] . '/i', $validMethods)) {
             return false;
         }
 
         // Do not cache requests that have the cache bypass cookie set
         if (! empty($_COOKIE[ $this->bypassCookieName ]) && $_COOKIE[ $this->bypassCookieName ] == 1 && $this->unitTestMode == false) {
+            return false;
+        }
+
+        // Do not cache CLI requests
+        if ((php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg') && $this->unitTestMode == false) {
             return false;
         }
 
@@ -388,5 +380,5 @@ class Cache
         $tagString = rtrim($tagString, ', ');
 
         return $tagString;
-}
+    }
 }
