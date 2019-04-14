@@ -42,6 +42,23 @@ $cache->cache('public', 120);
 (new Cache)->cache('public', 120);
 ```
 
+### Caching a specified URL
+This can be used for warming the cache, for instance.
+
+```php
+// Warm the cache for these URIs
+$uris = [
+    '/',
+    '/about-us',
+    '/contact',
+];
+
+$cache = (new Cache);
+foreach($uris as $uri) {
+    $cache->cache('public', 120, $uri);
+}
+```
+
 ### Exclusing URIs from cache
 
 A URL will not be cached if it matches any of the URIs set as excluded (In `https://example.com/foo?bar=baz`, the URI is `/foo`). Excluded URIs can contain wildcards. 
