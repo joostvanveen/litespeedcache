@@ -5,6 +5,10 @@ namespace Joostvanveen\Litespeedcache;
 /**
  * Class Cache
  *
+ * TODO implement cookie vary header.
+ * TODO implement all vary headers.
+ * TODO implement private caching.
+ *
  * @package Joostvanveen\Litespeedcache
  */
 class Cache
