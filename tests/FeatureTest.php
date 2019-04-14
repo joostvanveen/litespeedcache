@@ -5,7 +5,7 @@ namespace Joostvanveen\Litespeedcache\Tests;
 use Joostvanveen\Litespeedcache\Cache;
 use PHPUnit\Framework\TestCase;
 
-class CacheTest extends TestCase
+class FeatureTest extends TestCase
 {
 
     /**
@@ -199,7 +199,10 @@ class CacheTest extends TestCase
         $this->assertEmpty($this->getHeaders());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_can_be_enabled_and_disabled()
     {
         $cache = new Cache;
@@ -240,83 +243,9 @@ class CacheTest extends TestCase
         $this->assertEquals('X-LiteSpeed-Vary: cookie=mycookie', $headers[0]);
     }
 
-    /** @test */
-    public function it_can_set_an_array_of_urls_not_to_be_cached()
+    protected function getHeaders()
     {
-        $excludedUrls = ['test'];
-        $cache = new Cache;
-        $cache->setExcludedUrls($excludedUrls);
-
-        $this->assertSame($excludedUrls, $cache->getExcludedUrls());
-    }
-
-    /** @test */
-    public function it_can_test_if_a_uri_is_excluded()
-    {
-        $excludedUrl = 'test';
-        $cache = new Cache;
-        $cache->setExcludedUrls([$excludedUrl]);
-
-        $this->assertSame(true, $cache->isInExcludedUrls('test'));
-    }
-
-    /** @test */
-    public function excluded_uris_can_take_wildcards()
-    {
-        $excludedUrls = [
-            'test*',
-            '*/foo/*/bar',
-        ];
-        $cache = new Cache;
-        $cache->setExcludedUrls($excludedUrls);
-
-        $excludedUrl = 'test/foo';
-        $this->assertSame(true, $cache->isInExcludedUrls($excludedUrl));
-
-        $excludedUrl = 'test/foo/some/bar';
-        $this->assertSame(true, $cache->isInExcludedUrls($excludedUrl));
-    }
-
-    /** @test */
-    public function it_can_test_if_a_query_string_is_excluded()
-    {
-        $excludedQueryStrings = 'test=1';
-        $cache = new Cache;
-        $cache->setExcludedQueryStrings([$excludedQueryStrings]);
-
-        $this->assertSame(true, $cache->isInExcludedQueryStrings('test=1'));
-    }
-
-    /** @test */
-    public function excluded_query_strings_can_take_wildcards()
-    {
-        $excludedQueryStrings = [
-            'test*',
-            '*foo=*',
-        ];
-        $cache = new Cache;
-        $cache->setExcludedQueryStrings($excludedQueryStrings);
-
-        $excludedQueryString = 'test=1';
-        $this->assertSame(true, $cache->isInExcludedQueryStrings($excludedQueryString));
-
-        $excludedQueryString = '?test=1&foo=bar&baz=bat';
-        $this->assertSame(true, $cache->isInExcludedQueryStrings($excludedQueryString));
-    }
-
-    /** @test */
-    public function it_can_set_an_array_of_querys_trings_not_to_be_cached()
-    {
-        $excludedQueryStrings = ['test'];
-
-        $cache = new Cache;
-        $cache->setExcludedQueryStrings($excludedQueryStrings);
-
-        $this->assertSame($excludedQueryStrings, $cache->getExcludedQueryStrings());
-    }
-
-    protected function getHeaders () {
-        if (!function_exists('xdebug_get_headers')) {
+        if (! function_exists('xdebug_get_headers')) {
             throw new \Exception('function xdebug_get_headers() does not exist. Please activate Xdebug');
         }
 
