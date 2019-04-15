@@ -2,6 +2,7 @@
     "name": "joostvanveen/litespeedcache",
     "description": "A Litespeed cache library for PHP.",
     "type": "library",
+    "keywords": ["litespeed","cache","laravel"],
     "license": "MIT",
     "authors": [
         {
