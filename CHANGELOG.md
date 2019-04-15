@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 2019-04-15
+### Added
+- Added Laravel ServiceProvider and Facade.
+
 ## 0.3.0 2019-04-12
 ### Changed
 - Methods Cache::setExcludedUrls() and Cache::setExcludedQueryStrings() now also accept strings.

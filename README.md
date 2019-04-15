@@ -136,6 +136,24 @@ $cache->enable();
 $enabled = $cache->enabled(); // Returns true
 ```
 
+## Usage in Laravel project
+
+In a Laravel project, the package is automatically registered. There is also a Litespeedcache facade at your disposal.
+
+Instead of calling something like:
+```php
+(new Cache)->cache('public', 120);
+```
+
+You can simply call
+```php
+use LitespeedCache;
+
+[...]
+
+LitespeedCache::cache('public', 120);
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

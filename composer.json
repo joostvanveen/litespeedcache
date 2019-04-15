@@ -24,5 +24,15 @@
         "psr-4": {
             "Joostvanveen\\Litespeedcache\\Tests\\": "tests"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Joostvanveen\\Litespeedcache\\LitespeedServiceProvider"
+            ],
+            "aliases": {
+                "LitespeedCache": "Joostvanveen\\Litespeedcache\\Facades\\LitespeedCache"
+            }
+        }
     }
 }
