@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 2019-04-15
+### Added
+- Added the ability to add one tag or an array of tags at a time.
+- Added tags for packagist.
+
 ## 0.4.0 2019-04-15
 ### Added
 - Added Laravel ServiceProvider and Facade.

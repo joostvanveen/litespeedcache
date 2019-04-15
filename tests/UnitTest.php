@@ -124,6 +124,20 @@ class CacheTest extends TestCase
         $this->assertSame($excludedQueryStrings, $cache->getExcludedQueryStrings());
     }
 
+    /** @test */
+    public function it_can_add_tags ()
+    {
+        $cache = (new Cache)->addTags(['articles'])->addTags('pages');
+        $this->assertEquals(['articles', 'pages'], $cache->getTags());
+    }
+
+    /** @test */
+    public function it_can_add_a_single_tag ()
+    {
+        $cache = (new Cache)->addTag('articles')->addTag('pages');
+        $this->assertEquals(['articles', 'pages'], $cache->getTags());
+    }
+
     protected function getHeaders()
     {
         if (! function_exists('xdebug_get_headers')) {

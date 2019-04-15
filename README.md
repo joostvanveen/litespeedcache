@@ -99,12 +99,21 @@ You can add one or more tags to the current URL that is cached. You can use thes
 
 By default, addTags() takes an array of tags.
 ```php
-(new Cache)->addTags(['articles', 'english'])->cache('public', 120);
+(new Cache)->addTags(['articles', 'english'])
+           ->addTags(['page1'])
+           ->cache('public', 120);
 ``` 
 
 You can also pass in a string, if you need to define only one tag.
 ```php
 (new Cache)->addTags('articles')->cache('public', 120);
+```
+
+You can also add one tag at a time
+```php
+(new Cache)->addTags(['articles', 'english'])
+           ->addTag('some_other_tag')
+           ->cache('public', 120);
 ```
 
 ### Purging selected tags from cache

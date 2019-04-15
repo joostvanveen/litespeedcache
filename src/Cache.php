@@ -142,7 +142,14 @@ class Cache
 
     public function addTags($tags): Cache
     {
-        $this->tags = (array) $tags;
+        $this->tags = array_merge($this->tags, (array) $tags);
+
+        return $this;
+    }
+
+    public function addTag($tag): Cache
+    {
+        $this->tags[] = $tag;
 
         return $this;
     }
@@ -362,6 +369,14 @@ class Cache
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
     }
 
     protected function clearCachingHeaders(): void
