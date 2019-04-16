@@ -109,11 +109,18 @@ You can also pass in a string, if you need to define only one tag.
 (new \Joostvanveen\Litespeedcache\Cache)->addTags('articles')->cache('public', 120);
 ```
 
+### Purging a selected URI from cache
+To purge a specific URI, simply add the URI to the cache before calling purge()
+```php
+(new \Joostvanveen\Litespeedcache\Cache)->addUri('/about-us')
+                                        ->purge();
+```
+
 ### Purging selected tags from cache
-To purge tags, simply add the to the cache before calling purge()
+To purge tags, simply add the tag or tags to the cache before calling purge()
 ```php
 (new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
-                                        ->purge()
+                                        ->purge();
 ```
 
 There is also a special method to purge only tags: purgeTags(). By default, purgeTags() takes an array of tags.

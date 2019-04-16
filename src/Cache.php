@@ -144,7 +144,12 @@ class Cache
 
         // Set purge headers
         $purgeString = '';
-        $purgeString .= $this->getTagsString($this->tags);
+        if ($this->uri) {
+            $purgeString .= '/' . ltrim($this->uri, '/')  . ' ';
+        }
+        if (($tagString = $this->getTagsString($this->tags))) {
+            $purgeString .= $tagString;
+        }
 
         header(self::PURGE_HEADER . ': ' . $purgeString);
 
@@ -160,6 +165,13 @@ class Cache
 
         // Set purge headers
         header(self::PURGE_HEADER . ': *');
+
+        return $this;
+    }
+
+    public function addUri($uri): Cache
+    {
+        $this->uri = $uri;
 
         return $this;
     }

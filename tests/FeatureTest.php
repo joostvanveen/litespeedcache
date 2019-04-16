@@ -82,6 +82,20 @@ class FeatureTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
+    public function it_can_purge_a_uri()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->addUri('/about-us')
+                            ->purge();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Purge: /about-us', $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_can_purge_tags()
     {
         $tags = ['articles', 'pages'];
