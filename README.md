@@ -13,7 +13,7 @@ Enable the Litespeed in your .htaccess file.
     # Enable public cache
     CacheEnable public /
     
-    # Enable private cache
+    # Enable private cache if you need to
     CacheEnable private /
     
     # Check the public cache
@@ -28,6 +28,19 @@ Enable the Litespeed in your .htaccess file.
 ``` 
 
 ## Usage
+
+The package does not cache:
+- any requests other than GET and HEAD
+- any ajax requests
+- any CLI requests
+
+The cache also
+- can be enabled or disabled
+- can contain one or multiple tags
+- can contain vary headers
+- can contain an array of blacklisted URIs that should bot be cached
+- can contain an array of blacklisted query strings thta should not be cached
+
 ### Caching the current URL
 ```php
 use Joostvanveen\Litespeedcache\Cache;
@@ -189,6 +202,14 @@ use LitespeedCache;
 [...]
 
 LitespeedCache::cache('public', 120);
+```
+
+When you use caching in Laravel, you best check against the environment. 
+Since the cache sets headers, this can break your tests (phpunit sends output before the headers are set, which would result in `headers already sent` errors.)
+```
+if(! \App::environment(‘testing’) {
+    Cache::purge();
+}
 ```
 
 ## Litespeed documentation
