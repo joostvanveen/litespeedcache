@@ -424,7 +424,8 @@ class Cache
      */
     protected function setUrlAndQueryString($fullUrl = ''): void
     {
-        $fullUrl = empty($fullUrl) ? $_SERVER['REQUEST_URI'] : $fullUrl;
+        $requestUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $fullUrl = empty($fullUrl) ? $requestUri : $fullUrl;
         $urlData = parse_url($fullUrl);
 
         $this->uri = isset($urlData['path']) ? $urlData['path'] : '';

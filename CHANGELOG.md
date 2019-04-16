@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 2019-04-16
+### Changed
+- Fixed bug when run through tests in CLI Joost van Veen 2019-04-16 21:19
+
 ## 0.6.0 2019-04-16
 ### Added
 - Added purgeAll()
