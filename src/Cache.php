@@ -138,6 +138,22 @@ class Cache
     /**
      * @return $this
      */
+    public function purge(): Cache
+    {
+        $this->clearCachingHeaders();
+
+        // Set purge headers
+        $purgeString = '';
+        $purgeString .= $this->getTagsString($this->tags);
+
+        header(self::PURGE_HEADER . ': ' . $purgeString);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function purgeCache(): Cache
     {
         $this->clearCachingHeaders();

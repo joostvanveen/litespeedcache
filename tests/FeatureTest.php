@@ -60,7 +60,7 @@ class FeatureTest extends TestCase
                             ->addVary('value=default')
                             ->cache('private', 360, '/test?foo=bar');
 
-        $headers = $this->getHeaders();var_dump($headers);
+        $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Vary: value=default', $headers));
     }
 
@@ -87,6 +87,21 @@ class FeatureTest extends TestCase
         $tags = ['articles', 'pages'];
         $cache = (new Cache)->setUnitTestMode()
                             ->addTags($tags)
+                            ->purge();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Purge: tag=articles, tag=pages', $headers));
+        $this->assertFalse(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_purge_tags_using_its_own_method()
+    {
+        $tags = ['articles', 'pages'];
+        $cache = (new Cache)->setUnitTestMode()
                             ->purgeTags($tags);
 
         $headers = $this->getHeaders();

@@ -94,14 +94,14 @@ You can purge all items from the cache at once like so:
 (new \Joostvanveen\Litespeedcache\Cache)->purgeCache();
 ```
 
-### Adding tags the the cache
+### Adding tags to the cache
 You can add one or more tags to the current URL that is cached. You can use these tags to flush all caches containing those tags at once.
 
 By default, addTags() takes an array of tags.
 ```php
 (new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
-           ->addTags(['page1'])
-           ->cache('public', 120);
+                                        ->addTags(['page1'])
+                                        ->cache('public', 120);
 ``` 
 
 You can also pass in a string, if you need to define only one tag.
@@ -109,15 +109,14 @@ You can also pass in a string, if you need to define only one tag.
 (new \Joostvanveen\Litespeedcache\Cache)->addTags('articles')->cache('public', 120);
 ```
 
-You can also add one tag at a time
+### Purging selected tags from cache
+To purge tags, simply add the to the cache before calling purge()
 ```php
 (new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
-           ->addTag('some_other_tag')
-           ->cache('public', 120);
+                                        ->purge()
 ```
 
-### Purging selected tags from cache
-You can delete all caches containing a certain tag at once. By default, purgeTags() takes an array of tags.
+There is also a special method to purge only tags: purgeTags(). By default, purgeTags() takes an array of tags.
 ```php
 (new \Joostvanveen\Litespeedcache\Cache)->purgeTags(['articles', 'english']);
 ``` 
