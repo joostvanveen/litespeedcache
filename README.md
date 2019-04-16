@@ -74,9 +74,9 @@ $excludedUris = [
 ```
 
 ### Excluding query string from cache 
-A query string consists of the paramters added to a URL after the question mark. In `https://example.com/foo?bar=baz`, the query string is `bar=baz`
+A query string consists of the parameters added to a URL after the question mark. In `https://example.com/foo?bar=baz`, the query string is `bar=baz`
 
-A query string will not be cached if it matches any of the URIs set as excluded. The excluded query strings can contain wildcards.
+A URL with a query string will not be cached if the query string matches any of the URIs set as excluded. The excluded query strings can contain wildcards.
 
 In the following example, the URL `https://example.com/search?query=foo&page=1&direction=desc` would not be cached. 
 
@@ -90,7 +90,7 @@ $excludedQueryStrings = [
 ### Adding tags to the cache
 You can add one or more tags to the current URL that is cached. You can use these tags to flush all caches containing those tags at once.
 
-By default, addTags() takes an array of tags.
+By default, `addTags()` takes an array of tags.
 ```php
 (new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
                                         ->addTags(['page1'])
@@ -173,7 +173,7 @@ $cache->enable();
 $enabled = $cache->enabled(); // Returns true
 ```
 
-## Usage in Laravel project
+## Use Litespeed Cache in a Laravel project
 
 In a Laravel project, the package is automatically registered. There is also a Litespeedcache facade at your disposal.
 
