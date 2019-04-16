@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 2019-04-16
+### Added
+- Added purgeAll()
+- Added purge() method. Also takes tags and a single URI into account.
+
+### Changed
+- deprecated purgeCache() method
+
+### Removed
+- Removed undocumented, obsolete method addTag()
+
 ## 0.5.0 2019-04-16
 ### Added
 - Added VARY headers.
