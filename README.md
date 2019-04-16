@@ -1,5 +1,5 @@
 # joostvanveen/litespeedcache
-A Litespeed cache library for PHP.
+A framework agnostic Litespeed cache library for PHP. Can be used in any PHP application.
 
 ## Installation
 Require the package using composer:
