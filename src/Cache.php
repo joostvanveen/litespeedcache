@@ -5,7 +5,6 @@ namespace Joostvanveen\Litespeedcache;
 /**
  * Class Cache
  * TODO implement cookie vary header.
- * TODO implement all vary headers.
  * TODO implement private caching.
  *
  * @package Joostvanveen\Litespeedcache
@@ -159,7 +158,7 @@ class Cache
     /**
      * @return $this
      */
-    public function purgeCache(): Cache
+    public function purgeAll(): Cache
     {
         $this->clearCachingHeaders();
 
@@ -169,6 +168,20 @@ class Cache
         return $this;
     }
 
+    /**
+     * @deprecated Will be removed in 1.0.0. Use purgeAll() instead
+     * @return $this
+     */
+    public function purgeCache(): Cache
+    {
+        return $this->purgeAll();
+    }
+
+    /**
+     * @param $uri
+     *
+     * @return Cache
+     */
     public function addUri($uri): Cache
     {
         $this->uri = $uri;
@@ -176,6 +189,11 @@ class Cache
         return $this;
     }
 
+    /**
+     * @param $tags
+     *
+     * @return Cache
+     */
     public function addTags($tags): Cache
     {
         $this->tags = array_merge($this->tags, (array) $tags);
@@ -183,6 +201,11 @@ class Cache
         return $this;
     }
 
+    /**
+     * @param $varyValues
+     *
+     * @return Cache
+     */
     public function addVary($varyValues): Cache
     {
         $this->vary = array_merge($this->vary, (array) $varyValues);
@@ -217,6 +240,9 @@ class Cache
         return $this;
     }
 
+    /**
+     *
+     */
     public function setVaryHeader()
     {
         if (! empty($this->vary)) {
@@ -224,6 +250,9 @@ class Cache
         }
     }
 
+    /**
+     * @return $this
+     */
     public function setTagsHeader()
     {
         if (! empty($this->tags)) {
@@ -430,6 +459,9 @@ class Cache
         return $this->vary;
     }
 
+    /**
+     *
+     */
     protected function clearCachingHeaders(): void
     {
         header_remove(self::CONTROL_HEADER);

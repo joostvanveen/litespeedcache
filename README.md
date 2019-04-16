@@ -86,13 +86,6 @@ $excludedQueryStrings = [
 ];
 (new \Joostvanveen\Litespeedcache\Cache)->setExcludedQueryStrings($excludedQueryStrings)->cache('public', 120);
 ```
-                            
-### Flushing the cache
-
-You can purge all items from the cache at once like so:
-```php
-(new \Joostvanveen\Litespeedcache\Cache)->purgeCache();
-```
 
 ### Adding tags to the cache
 You can add one or more tags to the current URL that is cached. You can use these tags to flush all caches containing those tags at once.
@@ -103,6 +96,27 @@ By default, addTags() takes an array of tags.
                                         ->addTags(['page1'])
                                         ->cache('public', 120);
 ``` 
+
+### Adding a vary to the cache
+
+Sometimes, you want the cache to distinguish between different variants for the same URL.
+
+Example: say you have a multi-site ap that runs across different subdomains. Say you serve these two URLS:
+- www.domain.com/news?page=2
+- subdomain.domain.com/news?page=2
+
+These two URLS have different content, so you need Litespeed to store a cache for each URL. 
+By default, Litespeed Cache cannot do this. It only takes the `news?page=1` part to create te cache identifier, 
+which would be equal for both URLs.
+
+But when you add the subdomain as a `VARY`, Litespeed Cache **will** add that to the cache identifier, making 
+it store a different version for each domain.
+
+You want to be careful not to use too many vary values, or the identifiers will become so customized that no two cache identifiers in your app will ever be the same. This can for instance happen if you add the User Agent to the vary. 
+
+```php
+(new \Joostvanveen\Litespeedcache\Cache)->addVary('value=subdomain')->cache('public', 360);                            
+```
 
 You can also pass in a string, if you need to define only one tag.
 ```php
@@ -133,25 +147,12 @@ You can also pass in a string, if you need to define only one tag.
 (new \Joostvanveen\Litespeedcache\Cache)->purgeTags('english');
 ``` 
 
-### Adding a vary to the cache
+                            
+### Flushing the entire cache
 
-Sometimes, you want the cache to distinguish between different variants for the same URL.
-
-Example: say you have a multi-site ap that runs across different subdomains. Say you serve these two URLS:
-- www.domain.com/news?page=2
-- subdomain.domain.com/news?page=2
-
-These two URLS have different content, so you need Litespeed to store a cache for each URL. 
-By default, Litespeed Cache cannot do this. It only takes the `news?page=1` part to create te cache identifier, 
-which would be equal for both URLs.
-
-But when you add the subdomain as a `VARY`, Litespeed Cache **will** add that to the cache identifier, making 
-it store a different version for each domain.
-
-You want to be careful not to use too many vary values, or the identifiers will become so customized that no two cache identifiers in your app will ever be the same. This can for instance happen if you add the User Agent to the vary. 
-
+You can purge all items from the cache at once like so:
 ```php
-(new \Joostvanveen\Litespeedcache\Cache)->addVary('value=subdomain')->cache('public', 360);                            
+(new \Joostvanveen\Litespeedcache\Cache)->purgeAll();
 ```
 
 ### Bypassing the cache

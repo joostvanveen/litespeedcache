@@ -25,6 +25,20 @@ class FeatureTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
+    public function it_can_purge_all_cache()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->purgeAll();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Purge: *', $headers));
+        $this->assertEquals(1, count($headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_can_purge_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
