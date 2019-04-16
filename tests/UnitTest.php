@@ -127,8 +127,16 @@ class CacheTest extends TestCase
     /** @test */
     public function it_can_add_tags ()
     {
-        $cache = (new Cache)->addTags(['articles'])->addTags('pages');
+        $cache = (new Cache)->addTags(['articles', 'pages']);
         $this->assertEquals(['articles', 'pages'], $cache->getTags());
+
+        $cache = (new Cache)->addTags('articles')
+                            ->addTags('pages');
+        $this->assertEquals(['articles', 'pages'], $cache->getTags());
+
+        $cache = (new Cache)->addTags(['articles', 'pages'])
+                            ->addTags('post-1');
+        $this->assertEquals(['articles', 'pages', 'post-1'], $cache->getTags());
     }
 
     /** @test */
@@ -136,6 +144,18 @@ class CacheTest extends TestCase
     {
         $cache = (new Cache)->addTag('articles')->addTag('pages');
         $this->assertEquals(['articles', 'pages'], $cache->getTags());
+    }
+
+
+    /** @test */
+    public function it_can_add_vary_values ()
+    {
+        $cache = (new Cache)->addVary(['example.com', 'default-app']);
+        $this->assertEquals(['example.com', 'default-app'], $cache->getVary());
+
+        $cache = (new Cache)->addVary('example.com')
+                            ->addVary('default-app');
+        $this->assertEquals(['example.com', 'default-app'], $cache->getVary());
     }
 
     protected function getHeaders()

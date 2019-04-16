@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 2019-04-16
+### Added
+- Added VARY headers.
+
 ## 0.4.1 2019-04-15
 ### Added
 - Added the ability to add one tag or an array of tags at a time.

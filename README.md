@@ -53,7 +53,7 @@ $uris = [
     '/contact',
 ];
 
-$cache = (new Cache);
+$cache = (new \Joostvanveen\Litespeedcache\Cache);
 foreach($uris as $uri) {
     $cache->cache('public', 120, $uri);
 }
@@ -70,7 +70,7 @@ $excludedUris = [
     'checkout*',
     'admin*',
 ];
-(new Cache)->setExcludedUrls($excludedUris)->cache('public', 120);
+(new \Joostvanveen\Litespeedcache\Cache)->setExcludedUrls($excludedUris)->cache('public', 120);
 ```
 
 ### Excluding query string from cache 
@@ -84,14 +84,14 @@ In the following example, the URL `https://example.com/search?query=foo&page=1&d
 $excludedQueryStrings = [
     '*direction=*',
 ];
-(new Cache)->setExcludedQueryStrings($excludedQueryStrings)->cache('public', 120);
+(new \Joostvanveen\Litespeedcache\Cache)->setExcludedQueryStrings($excludedQueryStrings)->cache('public', 120);
 ```
                             
 ### Flushing the cache
 
 You can purge all items from the cache at once like so:
 ```php
-(new Cache)->purgeCache();
+(new \Joostvanveen\Litespeedcache\Cache)->purgeCache();
 ```
 
 ### Adding tags the the cache
@@ -99,19 +99,19 @@ You can add one or more tags to the current URL that is cached. You can use thes
 
 By default, addTags() takes an array of tags.
 ```php
-(new Cache)->addTags(['articles', 'english'])
+(new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
            ->addTags(['page1'])
            ->cache('public', 120);
 ``` 
 
 You can also pass in a string, if you need to define only one tag.
 ```php
-(new Cache)->addTags('articles')->cache('public', 120);
+(new \Joostvanveen\Litespeedcache\Cache)->addTags('articles')->cache('public', 120);
 ```
 
 You can also add one tag at a time
 ```php
-(new Cache)->addTags(['articles', 'english'])
+(new \Joostvanveen\Litespeedcache\Cache)->addTags(['articles', 'english'])
            ->addTag('some_other_tag')
            ->cache('public', 120);
 ```
@@ -119,13 +119,34 @@ You can also add one tag at a time
 ### Purging selected tags from cache
 You can delete all caches containing a certain tag at once. By default, purgeTags() takes an array of tags.
 ```php
-(new Cache)->purgeTags(['articles', 'english']);
+(new \Joostvanveen\Litespeedcache\Cache)->purgeTags(['articles', 'english']);
 ``` 
 
 You can also pass in a string, if you need to define only one tag.
 ```php
-(new Cache)->purgeTags('english');
+(new \Joostvanveen\Litespeedcache\Cache)->purgeTags('english');
 ``` 
+
+### Adding a vary to the cache
+
+Sometimes, you want the cache to distinguish between different variants for the same URL.
+
+Example: say you have a multi-site ap that runs across different subdomains. Say you serve these two URLS:
+- www.domain.com/news?page=2
+- subdomain.domain.com/news?page=2
+
+These two URLS have different content, so you need Litespeed to store a cache for each URL. 
+By default, Litespeed Cache cannot do this. It only takes the `news?page=1` part to create te cache identifier, 
+which would be equal for both URLs.
+
+But when you add the subdomain as a `VARY`, Litespeed Cache **will** add that to the cache identifier, making 
+it store a different version for each domain.
+
+You want to be careful not to use too many vary values, or the identifiers will become so customized that no two cache identifiers in your app will ever be the same. This can for instance happen if you add the User Agent to the vary. 
+
+```php
+(new \Joostvanveen\Litespeedcache\Cache)->addVary('value=subdomain')->cache('public', 360);                            
+```
 
 ### Bypassing the cache
 Sometimes, you need to inspect a URL without cache, e.g. for troubleshooting or previewing. 
@@ -136,7 +157,7 @@ E.g. this URL bypasses cache: `https://example.com?cache_bypass=1`
 ### Disabling the cache
 By default, the cache is enabled. But you can disable it as well.
 ```php
-$cache = new Cache; 
+$cache = new \Joostvanveen\Litespeedcache\Cache; 
 
 $cache->disable();
 $enabled = $cache->enabled(); // Returns false
@@ -151,7 +172,7 @@ In a Laravel project, the package is automatically registered. There is also a L
 
 Instead of calling something like:
 ```php
-(new Cache)->cache('public', 120);
+(new \Joostvanveen\Litespeedcache\Cache)->cache('public', 120);
 ```
 
 You can simply call
@@ -162,6 +183,10 @@ use LitespeedCache;
 
 LitespeedCache::cache('public', 120);
 ```
+
+## Litespeed documentation
+
+You can find the Litespeed Cache documentation here [Litespeed documentation: https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:developer_guide:response_headers](Litespeed documentation: https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:developer_guide:response_headers)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -4,7 +4,6 @@ namespace Joostvanveen\Litespeedcache;
 
 /**
  * Class Cache
- *
  * TODO implement cookie vary header.
  * TODO implement all vary headers.
  * TODO implement private caching.
@@ -24,6 +23,8 @@ class Cache
     /**
      * Set the cache vary for the current response. This tells the server to cache the object
      * with a specific vary value. This will not affect the varies used by other pages.
+     *
+     * See README.
      *
      * @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:developer_guide:response_headers#x-litespeed-vary
      */
@@ -100,6 +101,13 @@ class Cache
     protected $tags = [];
 
     /**
+     * Vary values to attach to the current cache.
+     *
+     * @var array
+     */
+    protected $vary = [];
+
+    /**
      * @var bool
      */
     protected $unitTestMode = false;
@@ -121,6 +129,7 @@ class Cache
 
         if ($this->shouldCache()) {
             $this->setCacheControlHeader($type, $lifeTime);
+            $this->setVaryHeader();
             $this->setTagsHeader();
         }
 
@@ -154,6 +163,13 @@ class Cache
         return $this;
     }
 
+    public function addVary($varyValues): Cache
+    {
+        $this->vary = array_merge($this->vary, (array) $varyValues);
+
+        return $this;
+    }
+
     /**
      * @return $this
      */
@@ -181,10 +197,17 @@ class Cache
         return $this;
     }
 
+    public function setVaryHeader()
+    {
+        if (! empty($this->vary)) {
+            header(self::VARY_HEADER . ': ' . implode(', ', $this->vary));
+        }
+    }
+
     public function setTagsHeader()
     {
         if (! empty($this->tags)) {
-            header(self::TAGS_HEADER . ': ' . implode(', ', $this->tags));
+            header(self::TAGS_HEADER . ': ' . implode(',', $this->tags));
         }
 
         return $this;
@@ -377,6 +400,14 @@ class Cache
     public function getTags(): array
     {
         return $this->tags;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVary(): array
+    {
+        return $this->vary;
     }
 
     protected function clearCachingHeaders(): void

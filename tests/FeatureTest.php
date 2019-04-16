@@ -43,10 +43,25 @@ class FeatureTest extends TestCase
     {
         $cache = (new Cache)->setUnitTestMode()
                             ->addTags(['articles', 'pages'])
+                            ->addTags('post-1')
                             ->cache('private', 360, '/test?foo=bar');
 
         $headers = $this->getHeaders();
-        $this->assertTrue(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
+        $this->assertTrue(in_array('X-LiteSpeed-Tag: articles, pages, post-1', $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_add_vary_to_cache()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->addVary('value=default')
+                            ->cache('private', 360, '/test?foo=bar');
+
+        $headers = $this->getHeaders();var_dump($headers);
+        $this->assertTrue(in_array('X-LiteSpeed-Vary: value=default', $headers));
     }
 
     /**
