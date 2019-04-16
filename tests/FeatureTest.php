@@ -91,6 +91,7 @@ class FeatureTest extends TestCase
 
         $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Purge: tag=articles, tag=pages', $headers));
+        $this->assertFalse(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
     }
 
     /**

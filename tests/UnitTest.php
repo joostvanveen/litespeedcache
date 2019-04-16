@@ -140,14 +140,6 @@ class CacheTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_a_single_tag ()
-    {
-        $cache = (new Cache)->addTag('articles')->addTag('pages');
-        $this->assertEquals(['articles', 'pages'], $cache->getTags());
-    }
-
-
-    /** @test */
     public function it_can_add_vary_values ()
     {
         $cache = (new Cache)->addVary(['example.com', 'default-app']);

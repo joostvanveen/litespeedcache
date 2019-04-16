@@ -23,7 +23,6 @@ class Cache
     /**
      * Set the cache vary for the current response. This tells the server to cache the object
      * with a specific vary value. This will not affect the varies used by other pages.
-     *
      * See README.
      *
      * @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:developer_guide:response_headers#x-litespeed-vary
@@ -156,13 +155,6 @@ class Cache
         return $this;
     }
 
-    public function addTag($tag): Cache
-    {
-        $this->tags[] = $tag;
-
-        return $this;
-    }
-
     public function addVary($varyValues): Cache
     {
         $this->vary = array_merge($this->vary, (array) $varyValues);
@@ -207,7 +199,7 @@ class Cache
     public function setTagsHeader()
     {
         if (! empty($this->tags)) {
-            header(self::TAGS_HEADER . ': ' . implode(',', $this->tags));
+            header(self::TAGS_HEADER . ': ' . implode(', ', $this->tags));
         }
 
         return $this;
@@ -424,6 +416,10 @@ class Cache
      */
     protected function getTagsString($tags): string
     {
+        if (empty($tags)) {
+            return '';
+        }
+
         $tagString = '';
         foreach ((array) $tags as $tag) {
             $tagString .= 'tag=' . $tag . ', ';
