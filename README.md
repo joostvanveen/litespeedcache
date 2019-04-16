@@ -206,7 +206,7 @@ LitespeedCache::cache('public', 120);
 
 When you use caching in Laravel, you best check against the environment. 
 Since the cache sets headers, this can break your tests (phpunit sends output before the headers are set, which would result in `headers already sent` errors.)
-```
+```php
 if(! \App::environment(‘testing’) {
     Cache::purge();
 }
