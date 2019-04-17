@@ -139,6 +139,10 @@ class Cache
      */
     public function purge(): Cache
     {
+        if ($this->isCliRequest()) {
+            return $this;
+        }
+
         $this->clearCachingHeaders();
 
         // Set purge headers
@@ -160,6 +164,10 @@ class Cache
      */
     public function purgeAll(): Cache
     {
+        if ($this->isCliRequest()) {
+            return $this;
+        }
+
         $this->clearCachingHeaders();
 
         // Set purge headers
@@ -218,6 +226,10 @@ class Cache
      */
     public function purgeTags($tags): Cache
     {
+        if ($this->isCliRequest()) {
+            return $this;
+        }
+
         $this->clearCachingHeaders();
 
         $tagString = $this->getTagsString($tags);
@@ -297,7 +309,7 @@ class Cache
         }
 
         // Do not cache CLI requests
-        if ((php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg') && $this->unitTestMode == false) {
+        if ($this->isCliRequest()) {
             return false;
         }
 
@@ -488,5 +500,13 @@ class Cache
         $tagString = rtrim($tagString, ', ');
 
         return $tagString;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isCliRequest(): bool
+    {
+        return (php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg') && $this->unitTestMode == false;
     }
 }

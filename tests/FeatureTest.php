@@ -39,7 +39,20 @@ class FeatureTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
-    public function it_can_purge_cache()
+    public function it_does_not_purgeall_on_a_cli_request()
+    {
+        // We will not use ->setUnitTestMode() this time
+        $cache = (new Cache)->purgeAll();
+
+        $headers = $this->getHeaders();
+        $this->assertEquals(0, count($headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_purge_all_cache_deprecated()
     {
         $cache = (new Cache)->setUnitTestMode()
                             ->purgeCache();
@@ -61,6 +74,7 @@ class FeatureTest extends TestCase
                             ->cache('private', 360, '/test?foo=bar');
 
         $headers = $this->getHeaders();
+        $this->assertEquals(['articles', 'pages', 'post-1'], $cache->getTags());
         $this->assertTrue(in_array('X-LiteSpeed-Tag: articles, pages, post-1', $headers));
     }
 
@@ -75,6 +89,7 @@ class FeatureTest extends TestCase
                             ->cache('private', 360, '/test?foo=bar');
 
         $headers = $this->getHeaders();
+        $this->assertEquals(['value=default'], $cache->getVary());
         $this->assertTrue(in_array('X-LiteSpeed-Vary: value=default', $headers));
     }
 
@@ -126,6 +141,18 @@ class FeatureTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
+    public function it_does_not_purge_a_cli_request()
+    {
+        $cache = (new Cache)->purge();
+
+        $headers = $this->getHeaders();
+        $this->assertEquals(0, count($headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function it_can_purge_tags_using_its_own_method()
     {
         $tags = ['articles', 'pages'];
@@ -135,6 +162,19 @@ class FeatureTest extends TestCase
         $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Purge: tag=articles, tag=pages', $headers));
         $this->assertFalse(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_purge_tags_for_a_cli_request()
+    {
+        $tags = ['articles', 'pages'];
+        $cache = (new Cache)->purgeTags($tags);
+
+        $headers = $this->getHeaders();
+        $this->assertEquals(0, count($headers));
     }
 
     /**
@@ -155,7 +195,7 @@ class FeatureTest extends TestCase
     public function it_does_not_cache_ajax_requests()
     {
         $_SERVER['X-Requested-With'] = 'XMLHttpRequest';
-        $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
+        $cache = (new Cache)->setUnitTestMode()->cache('private', 360, '/test?foo=bar');
 
         $this->assertEquals(0, count($this->getHeaders()));
     }
@@ -193,7 +233,7 @@ class FeatureTest extends TestCase
 
         foreach ($requestTypes as $requestType) {
             $_SERVER['REQUEST_METHOD'] = $requestType;
-            $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
+            $cache = (new Cache)->setUnitTestMode()->cache('private', 360, '/test?foo=bar');
             $this->assertEquals(0, count($this->getHeaders()));
         }
     }
@@ -204,7 +244,7 @@ class FeatureTest extends TestCase
      */
     public function it_does_not_cache_if_bypass_cookie_is_set()
     {
-        $_COOKIE['cache_bypass'] = 1;
+        $_COOKIE['cache_bypass'] = '1';
         $cache = (new Cache)->cache('private', 360, '/test');
 
         $headers = $this->getHeaders();
@@ -238,6 +278,20 @@ class FeatureTest extends TestCase
                             ->setExcludedUrls($excludedUrls)
                             ->cache('public', 360, '/test?foo=bar');
 
+        $this->assertEquals($excludedUrls, $cache->getExcludedUrls());
+        $this->assertEmpty($this->getHeaders());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_cache_when_bypass_uery_string_is_in_url()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->cache('public', 360, '/test?cache_bypass=1');
+
+        $this->assertEquals(['*cache_bypass=1*'], $cache->getExcludedQueryStrings());
         $this->assertEmpty($this->getHeaders());
     }
 
@@ -255,6 +309,8 @@ class FeatureTest extends TestCase
                             ->setExcludedQueryStrings($excludedQueryString)
                             ->cache('public', 360, '/test?foo=bar');
 
+        $excpected = ['foo=*', '*cache_bypass=1*'];
+        $this->assertEquals($excpected, $cache->getExcludedQueryStrings());
         $this->assertEmpty($this->getHeaders());
     }
 
