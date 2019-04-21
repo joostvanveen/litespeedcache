@@ -3,6 +3,8 @@
 # joostvanveen/litespeedcache
 A framework agnostic Litespeed cache library for PHP. Can be used in any PHP application.
 
+If you are looking for the Laravel implementation, see [https://github.com/joostvanveen/laravel-litespeedcache](https://github.com/joostvanveen/laravel-litespeedcache)
+
 ## Installation
 Require the package using composer:
 ```

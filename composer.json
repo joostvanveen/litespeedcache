@@ -2,7 +2,7 @@
     "name": "joostvanveen/litespeedcache",
     "description": "A framework agnostic Litespeed cache library for PHP. Can be used in any PHP application.",
     "type": "library",
-    "keywords": ["litespeed","cache","laravel"],
+    "keywords": ["litespeed","cache","caching","fpc","full page cache","varnish","php"],
     "license": "MIT",
     "authors": [
         {
@@ -24,16 +24,6 @@
     "autoload-dev": {
         "psr-4": {
             "Joostvanveen\\Litespeedcache\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Joostvanveen\\Litespeedcache\\LitespeedServiceProvider"
-            ],
-            "aliases": {
-                "LitespeedCache": "Joostvanveen\\Litespeedcache\\Facades\\LitespeedCache"
-            }
         }
     }
 }

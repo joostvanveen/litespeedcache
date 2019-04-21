@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0 2019-04-21
+### Changed
+- Added $ache->setLifetime() and $cache->setType() + feature tests.
+- Removed Laravel-specific code. That will get its own package.
+
 ## 0.6.2 2019-04-17
 ### Changed
 - Do not purge() or purgeAll() on CLI request. This breaks unit tests of application that use this package.
