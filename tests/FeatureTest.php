@@ -3,6 +3,7 @@
 namespace Joostvanveen\Litespeedcache\Tests;
 
 use Joostvanveen\Litespeedcache\Cache;
+use Joostvanveen\Litespeedcache\LitespeedcacheException;
 use PHPUnit\Framework\TestCase;
 
 class FeatureTest extends TestCase
@@ -19,6 +20,48 @@ class FeatureTest extends TestCase
 
         $headers = $this->getHeaders();
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_set_the_type()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setType('private')
+                            ->cache();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=' . $cache->getLifeTime(), $headers));
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_throws_an_exception_when_setting_an_invalid_type()
+    {
+        $this->expectException(LitespeedcacheException::class);
+
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setType('foo')
+                            ->cache();
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_set_the_lifetime()
+    {
+        $lifetime = 3600;
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setLifetime($lifetime)
+                            ->cache();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: ' . $cache->getType() . ', max-age=' . $lifetime, $headers));
     }
 
     /**

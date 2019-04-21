@@ -57,6 +57,13 @@ class Cache
     protected $lifetime = 120;
 
     /**
+     * The cache type (public|private|shared|no-vary|esi|no-cache|no-store)
+     *
+     * @var string
+     */
+    protected $type = 'public';
+
+    /**
      * If this cookie is present and set to '1' then we wil not cache.
      *
      * @var string
@@ -126,7 +133,10 @@ class Cache
         $this->setUrlAndQueryString($fullUrl);
 
         if ($this->shouldCache()) {
-            $this->setCacheControlHeader($type, $lifeTime);
+            if (! empty($type)) {
+                $this->setType($type);
+            }
+            $this->setCacheControlHeader($this->getType(), $lifeTime);
             $this->setVaryHeader();
             $this->setTagsHeader();
         }
@@ -148,7 +158,7 @@ class Cache
         // Set purge headers
         $purgeString = '';
         if ($this->uri) {
-            $purgeString .= '/' . ltrim($this->uri, '/')  . ' ';
+            $purgeString .= '/' . ltrim($this->uri, '/') . ' ';
         }
         if (($tagString = $this->getTagsString($this->tags))) {
             $purgeString .= $tagString;
@@ -177,8 +187,8 @@ class Cache
     }
 
     /**
-     * @deprecated Will be removed in 1.0.0. Use purgeAll() instead
      * @return $this
+     * @deprecated Will be removed in 1.0.0. Use purgeAll() instead
      */
     public function purgeCache(): Cache
     {
@@ -246,7 +256,7 @@ class Cache
      */
     public function setCacheControlHeader($type = 'public', $lifetime = 0): Cache
     {
-        $lifeTime = $lifetime ? $lifetime : self::LIFETIME;
+        $lifeTime = $lifetime ? $lifetime : $this->lifetime;
         header(self::CONTROL_HEADER . ': ' . $type . ', max-age=' . $lifeTime);
 
         return $this;
@@ -391,6 +401,45 @@ class Cache
     }
 
     /**
+     * @return int
+     */
+    public function getLifetime(): int
+    {
+        return $this->lifetime;
+    }
+
+    /**
+     * Cache lifetime in minutes.
+     *
+     * @param int $lifetime
+     */
+    public function setLifetime(int $lifetime): Cache
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): Cache
+    {
+        $type = $this->guardValidType($type);
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getExcludedUrls(): array
@@ -508,5 +557,25 @@ class Cache
     protected function isCliRequest(): bool
     {
         return (php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg') && $this->unitTestMode == false;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     * @throws LitespeedcacheException
+     */
+    protected function guardValidType($type)
+    {
+        $validTypes = [
+            'public',
+            'private',
+        ];
+
+        if (! in_array($type, $validTypes)) {
+            throw new LitespeedcacheException($type . ' is not a valid cache type');
+        }
+
+        return $type;
     }
 }

@@ -43,6 +43,13 @@ The cache also
 - can contain an array of blacklisted URIs that should bot be cached
 - can contain an array of blacklisted query strings thta should not be cached
 
+### Default configuration values
+- type = public
+- enabled = true (cache is enabled)
+- lifetime = 120 (2 hours)
+- bypass cookiename = cache_bypass (see [Bypassing the cache](#bypassing-the-cache))
+- bypass querystring = cache_bypass (see [Bypassing the cache](#bypassing-the-cache))
+
 ### Caching the current URL
 ```php
 use Joostvanveen\Litespeedcache\Cache;
@@ -51,10 +58,14 @@ use Joostvanveen\Litespeedcache\Cache;
 
 // Cache the current URL as public with a cache lifetime of 120 minutes
 $cache = new Cache;
-$cache->cache('public', 120);
+$cache->cache(); // use default type and lifetime
 
 // You can also use new Cache directly, like so:
-(new Cache)->cache('public', 120);
+(new Cache)->cache(); // use default type and lifetime
+(new Cache)->cache('private', 360); // use explicit type and lifetime
+
+// You can also use the setType() and setLifetime() methods
+(new Cache)->setType('private')->setLifetime(3600)->cache();
 ```
 
 ### Caching a specific URL
