@@ -36,6 +36,28 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=' . $cache->getLifeTime(), $headers));
     }
 
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_override_previous_cache_header()
+    {
+        // Set cache header no.1
+        $cache = (new Cache)->setUnitTestMode()
+                            ->cache('private', 360, '/test?foo=bar');
+
+        // Set cache header  no.2
+        $cache->cache('public', 120, '/test?foo=bar');
+
+        $headers = $this->getHeaders();
+
+        // Header no.1 should no longer be present
+        $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: public, max-age=120', $headers));
+        // Header no.2 should be present
+        $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
+    }
+
     /**
      * @test
      * @runInSeparateProcess
