@@ -67,7 +67,7 @@ $cache->cache(); // use default type and lifetime
 (new Cache)->cache('private', 360); // use explicit type and lifetime
 
 // You can also use the setType() and setLifetime() methods
-(new Cache)->setType('private')->setLifetime(3600)->cache();
+(new Cache)->setEnabled(true)->setType('private')->setLifetime(3600)->cache();
 ```
 
 ### Caching a specific URL

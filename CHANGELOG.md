@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 2019-04-22
+### Changed
+- Added $cache->setEnabled() + $cache->getEnabled() + unit tests.
+
 ## 1.0.0 2019-04-21
 ### Changed
 - Added $ache->setLifetime() and $cache->setType() + feature tests.

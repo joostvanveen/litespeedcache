@@ -401,6 +401,24 @@ class Cache
     }
 
     /**
+     * @return bool
+     */
+    public function getEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): Cache
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getLifetime(): int

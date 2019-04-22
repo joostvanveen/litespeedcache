@@ -14,6 +14,8 @@ class CacheTest extends TestCase
         $cache = new Cache;
         $this->assertSame(false, $cache->disable()->enabled());
         $this->assertSame(true, $cache->enable()->enabled());
+        $this->assertSame(true, $cache->setEnabled(true)->enabled());
+        $this->assertSame(false, $cache->setEnabled(false)->enabled());
 
         $cache = (new Cache)->setUnitTestMode()
                             ->disable()
