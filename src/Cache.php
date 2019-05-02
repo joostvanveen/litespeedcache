@@ -124,10 +124,14 @@ class Cache
      *
      * @return $this
      */
-    public function cache($type = '', $lifeTime = 0, $fullUrl = ''): Cache
+    public function cache($type = '', $lifeTime = null, $fullUrl = ''): Cache
     {
         if ($this->enabled == false) {
             return $this;
+        }
+
+        if ($lifeTime !== null) {
+            $this->setLifetime($lifeTime);
         }
 
         $this->setUrlAndQueryString($fullUrl);
@@ -310,6 +314,12 @@ class Cache
         // Do not cache any other requests than GET or HEAD requests
         $validMethods = ['GET', 'HEAD'];
         if (! empty($_SERVER['REQUEST_METHOD']) && ! preg_grep('/' . $_SERVER['REQUEST_METHOD'] . '/i', $validMethods)) {
+            return false;
+        }
+
+        // Do not cache requests that have the cache bypass cookie set
+        var_dump($this->getLifetime());
+        if ($this->getLifetime() == 0) {
             return false;
         }
 

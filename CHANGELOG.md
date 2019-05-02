@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 2019-05-02
+### Changed
+- If the lifetime is set to 0 the page will not be cached.
+
 ## 1.1.0 2019-04-22
 ### Changed
 - Added $cache->setEnabled() + $cache->getEnabled() + unit tests.

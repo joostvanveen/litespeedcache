@@ -36,7 +36,6 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=' . $cache->getLifeTime(), $headers));
     }
 
-
     /**
      * @test
      * @runInSeparateProcess
@@ -376,6 +375,24 @@ class FeatureTest extends TestCase
 
         $excpected = ['foo=*', '*cache_bypass=1*'];
         $this->assertEquals($excpected, $cache->getExcludedQueryStrings());
+        $this->assertEmpty($this->getHeaders());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_does_not_cache_when_ttl_is_zero()
+    {
+        // Test setting lifetime in cache() method
+        $cache = (new Cache)->setUnitTestMode()
+                            ->cache('public', 0, '/test?foo=bar');
+        $this->assertEmpty($this->getHeaders());
+
+        // Test setting lifetime in setLifetime() method
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setLifetime(0)
+                            ->cache();
         $this->assertEmpty($this->getHeaders());
     }
 
