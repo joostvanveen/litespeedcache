@@ -318,7 +318,6 @@ class Cache
         }
 
         // Do not cache requests that have the cache bypass cookie set
-        var_dump($this->getLifetime());
         if ($this->getLifetime() == 0) {
             return false;
         }
