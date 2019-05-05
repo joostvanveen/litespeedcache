@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 2019-05-05
+### Added
+- Added ESI support + unit tests + docs
+
+### Changed
+- Removed wandering var_dump()
+- Run tests in separate process by default (and non-verbose)
+
 ## 1.2.0 2019-05-02
 ### Changed
 - If the lifetime is set to 0 the page will not be cached.
