@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 class FeatureTest extends TestCase
 {
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -32,9 +30,7 @@ class FeatureTest extends TestCase
         $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_set_the_type()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -45,9 +41,18 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=' . $cache->getLifeTime(), $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
+    public function it_can_enable_esi()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setEsiEnabled(true)
+                            ->cache();
+
+        $headers = $this->getHeaders();
+        $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: public, esi=on, max-age=' . $cache->getLifeTime(), $headers));
+    }
+
+    /** @test */
     public function it_can_override_previous_cache_header()
     {
         // Set cache header no.1
@@ -65,9 +70,7 @@ class FeatureTest extends TestCase
         $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_throws_an_exception_when_setting_an_invalid_type()
     {
         $this->expectException(LitespeedcacheException::class);
@@ -77,9 +80,7 @@ class FeatureTest extends TestCase
                             ->cache();
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_set_the_lifetime()
     {
         $lifetime = 3600;
@@ -91,9 +92,7 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: ' . $cache->getType() . ', max-age=' . $lifetime, $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_purge_all_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -104,9 +103,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(1, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_purgeall_on_a_cli_request()
     {
         // We will not use ->setUnitTestMode() this time
@@ -116,9 +113,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_purge_all_cache_deprecated()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -129,9 +124,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(1, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_add_tags_to_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -144,9 +137,7 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Tag: articles, pages, post-1', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_add_vary_to_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -158,9 +149,7 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Vary: value=default', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_add_a_single_tag_to_cache()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -171,9 +160,7 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Tag: pages', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_purge_a_uri()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -184,9 +171,7 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Purge: /about-us', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_purge_tags()
     {
         $tags = ['articles', 'pages'];
@@ -199,9 +184,7 @@ class FeatureTest extends TestCase
         $this->assertFalse(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_purge_a_cli_request()
     {
         $cache = (new Cache)->purge();
@@ -210,9 +193,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_purge_tags_using_its_own_method()
     {
         $tags = ['articles', 'pages'];
@@ -224,9 +205,7 @@ class FeatureTest extends TestCase
         $this->assertFalse(in_array('X-LiteSpeed-Tag: articles, pages', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_purge_tags_for_a_cli_request()
     {
         $tags = ['articles', 'pages'];
@@ -236,9 +215,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_cli_requests()
     {
         $cache = (new Cache)->cache('private', 360, '/test?foo=bar');
@@ -246,9 +223,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($this->getHeaders()));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_ajax_requests()
     {
         $_SERVER['X-Requested-With'] = 'XMLHttpRequest';
@@ -257,9 +232,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($this->getHeaders()));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_caches_get_and_head_requests()
     {
         $requestTypes = [
@@ -275,9 +248,7 @@ class FeatureTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_post_put_or_delete_requests()
     {
         $requestTypes = [
@@ -293,9 +264,7 @@ class FeatureTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_if_bypass_cookie_is_set()
     {
         $_COOKIE['cache_bypass'] = '1';
@@ -305,9 +274,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_if_bypass_is_in_query_string()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -317,9 +284,7 @@ class FeatureTest extends TestCase
         $this->assertEquals(0, count($headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_an_excluded_uri()
     {
         $excludedUrls = [
@@ -334,9 +299,7 @@ class FeatureTest extends TestCase
         $this->assertEmpty($this->getHeaders());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_when_bypass_uery_string_is_in_url()
     {
         $cache = (new Cache)->setUnitTestMode()
@@ -346,9 +309,7 @@ class FeatureTest extends TestCase
         $this->assertEmpty($this->getHeaders());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_an_excluded_queryString()
     {
         $excludedQueryString = [
@@ -364,9 +325,7 @@ class FeatureTest extends TestCase
         $this->assertEmpty($this->getHeaders());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_does_not_cache_when_ttl_is_zero()
     {
         // Test setting lifetime in cache() method
@@ -381,9 +340,7 @@ class FeatureTest extends TestCase
         $this->assertEmpty($this->getHeaders());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_be_enabled_and_disabled()
     {
         $cache = new Cache;
@@ -398,9 +355,7 @@ class FeatureTest extends TestCase
         $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_set_the_cache_control_header()
     {
         $cache = new Cache;
@@ -410,9 +365,7 @@ class FeatureTest extends TestCase
         $this->assertEquals('X-LiteSpeed-Cache-Control: private, max-age=100', $headers[0]);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_set_the_cache_cookie_header()
     {
         $cache = new Cache;

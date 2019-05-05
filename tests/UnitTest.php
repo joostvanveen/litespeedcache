@@ -21,6 +21,14 @@ class CacheTest extends TestCase
     }
 
     /** @test */
+    public function it_can_set_and_get_esi()
+    {
+        $cache = new Cache;
+        $this->assertSame(false, $cache->setEsiEnabled(false)->getEsiEnabled());
+        $this->assertSame(true, $cache->setEsiEnabled(true)->getEsiEnabled());
+    }
+
+    /** @test */
     public function it_can_set_an_array_of_urls_not_to_be_cached()
     {
         $excludedUrls = ['test'];

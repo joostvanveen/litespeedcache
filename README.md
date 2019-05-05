@@ -128,6 +128,45 @@ By default, `addTags()` takes an array of tags.
                                         ->cache('public', 120);
 ``` 
 
+### Adding ESI to the cache
+Sometimes, you don't want to cache **all** content on a page. For instance, if you have a form with a csrf token, 
+you do not want to cache the csrf token. It has to be unique for all users. You can achieve this by using Edge 
+Side Includes, or ESI blocks. These ESI block punch holes, as it were, in your cached page.
+
+An ESI block is a HTML tag that has special markup and is **not** cached. Instead, on constructing the cached page Litespeed cache
+will replace the ESI tag with the contents retrieved from another (uncached or privately cached) URL on your domain. 
+Typically, such a URL will return a string or a block of HTML, for instance a csrf token, or the name of a logged in user, 
+or an intricate HTML string containing the contents of a shopping cart.
+
+Using ESI is quite simple:
+1. Enable ESI in joostvanveen/litespeedcache `(new \Joostvanveen\Litespeedcache\Cache)->setEsiEnabled(true)->cache()`
+1. Create a URL on you domain that will return the content for the ESI block, for instance 'https://mydomain.com/token'. 
+1. Use an ESI markup block in your page that contains the ESI URL: `<esi:include src="https://mydomain.com/token" />`
+
+**ESI example**<br>
+Let's say you have a form with a csrf token, and the URL to retreived the uncached token from is https://mydomain.com/token.
+
+Without ESI, you would display the token in a form like this:
+```html
+<input type="hidden" name="_token" value="{{ csrf_token() }}">
+```
+
+With ESI, you first create a URL that returns `<input type="hidden" name="_token" value="{{ csrf_token() }}">` and then insert an ESI 
+block in the page that will be replaced by the contents of that URL.
+```html
+<esi:include src="https://mydomain.com/get-my-token" />
+```
+
+Of course, you can also have the URL return just the token and place the ESI block in the form like this:
+```html
+<input type="hidden" name="_token" value="<esi:include src="https://mydomain.com/get-my-token" />">
+```
+
+A word to the wise: try to use as little ESI blocks as possible. Constructing a cached page with a lot 
+of ESI blocks can take so much time and resources that it defeats all the advantages of caching.
+A page containing only a few ESI blocks will be a little slower, but will still perform well. 
+When using ESI blocks, measure the difference in response time for a cached and uncached page. 
+
 ### Adding a vary to the cache
 
 Sometimes, you want the cache to distinguish between different variants for the same URL.

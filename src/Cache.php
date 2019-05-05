@@ -64,6 +64,13 @@ class Cache
     protected $type = 'public';
 
     /**
+     * Whether esi blocks are enabled
+     *
+     * @var bool
+     */
+    protected $esiEnabled = false;
+
+    /**
      * If this cookie is present and set to '1' then we wil not cache.
      *
      * @var string
@@ -261,14 +268,43 @@ class Cache
     public function setCacheControlHeader($type = 'public', $lifetime = 0): Cache
     {
         $lifeTime = $lifetime ? $lifetime : $this->lifetime;
-        header(self::CONTROL_HEADER . ': ' . $type . ', max-age=' . $lifeTime);
+
+        // Set cache type
+        $header = self::CONTROL_HEADER . ': ' . $type;
+
+        // Set esi
+        if ($this->getEsiEnabled()) {
+            $header .= ', esi=on';
+        }
+
+        // Set lifetime
+        $header .= ', max-age=' . $lifeTime;
+
+        header($header);
 
         return $this;
     }
 
     /**
-     *
+     * @return bool
      */
+    public function getEsiEnabled(): bool
+    {
+        return $this->esiEnabled;
+    }
+
+    /**
+     * @param bool $esiEnabled
+     *
+     * @return Cache
+     */
+    public function setEsiEnabled(bool $esiEnabled): Cache
+    {
+        $this->esiEnabled = $esiEnabled;
+
+        return $this;
+    }
+
     public function setVaryHeader()
     {
         if (! empty($this->vary)) {
