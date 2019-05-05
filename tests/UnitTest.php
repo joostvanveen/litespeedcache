@@ -18,39 +18,6 @@ class CacheTest extends TestCase
         $this->assertSame(false, $cache->setEnabled(false)->enabled());
         $this->assertSame(true, $cache->setEnabled(true)->getEnabled());
         $this->assertSame(false, $cache->setEnabled(false)->getEnabled());
-
-        $cache = (new Cache)->setUnitTestMode()
-                            ->disable()
-                            ->cache('private', 360, '/test?foo=bar');
-
-        $headers = $this->getHeaders();
-        $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
-    }
-
-    /**
-     * @test
-     * @runInSeparateProcess
-     */
-    public function it_can_set_the_cache_control_header()
-    {
-        $cache = new Cache;
-        $cache->setCacheControlHeader('private', 100);
-
-        $headers = $this->getHeaders();
-        $this->assertEquals('X-LiteSpeed-Cache-Control: private, max-age=100', $headers[0]);
-    }
-
-    /**
-     * @test
-     * @runInSeparateProcess
-     */
-    public function it_can_set_the_cache_cookie_header()
-    {
-        $cache = new Cache;
-        $cache->setCacheCookieHeader('mycookie');
-
-        $headers = $this->getHeaders();
-        $this->assertEquals('X-LiteSpeed-Vary: cookie=mycookie', $headers[0]);
     }
 
     /** @test */
@@ -129,7 +96,7 @@ class CacheTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_tags ()
+    public function it_can_add_tags()
     {
         $cache = (new Cache)->addTags(['articles', 'pages']);
         $this->assertEquals(['articles', 'pages'], $cache->getTags());
@@ -144,7 +111,7 @@ class CacheTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_vary_values ()
+    public function it_can_add_vary_values()
     {
         $cache = (new Cache)->addVary(['example.com', 'default-app']);
         $this->assertEquals(['example.com', 'default-app'], $cache->getVary());
@@ -152,14 +119,5 @@ class CacheTest extends TestCase
         $cache = (new Cache)->addVary('example.com')
                             ->addVary('default-app');
         $this->assertEquals(['example.com', 'default-app'], $cache->getVary());
-    }
-
-    protected function getHeaders()
-    {
-        if (! function_exists('xdebug_get_headers')) {
-            throw new \Exception('function xdebug_get_headers() does not exist. Please activate Xdebug');
-        }
-
-        return xdebug_get_headers();
     }
 }

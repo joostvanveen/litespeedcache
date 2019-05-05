@@ -11,7 +11,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_cache()
     {
@@ -22,9 +21,19 @@ class FeatureTest extends TestCase
         $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
     }
 
+    /** @test */
+    public function it_can_be_disabled()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->disable()
+                            ->cache('private', 360, '/test?foo=bar');
+
+        $headers = $this->getHeaders();
+        $this->assertFalse(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $headers));
+    }
+
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_set_the_type()
     {
@@ -38,7 +47,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_override_previous_cache_header()
     {
@@ -59,7 +67,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_throws_an_exception_when_setting_an_invalid_type()
     {
@@ -72,7 +79,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_set_the_lifetime()
     {
@@ -87,7 +93,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_purge_all_cache()
     {
@@ -101,7 +106,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_purgeall_on_a_cli_request()
     {
@@ -114,7 +118,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_purge_all_cache_deprecated()
     {
@@ -128,7 +131,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_add_tags_to_cache()
     {
@@ -144,7 +146,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_add_vary_to_cache()
     {
@@ -159,7 +160,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_add_a_single_tag_to_cache()
     {
@@ -173,7 +173,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_purge_a_uri()
     {
@@ -187,7 +186,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_purge_tags()
     {
@@ -203,7 +201,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_purge_a_cli_request()
     {
@@ -215,7 +212,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_purge_tags_using_its_own_method()
     {
@@ -230,7 +226,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_purge_tags_for_a_cli_request()
     {
@@ -243,7 +238,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_cli_requests()
     {
@@ -254,7 +248,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_ajax_requests()
     {
@@ -266,7 +259,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_caches_get_and_head_requests()
     {
@@ -285,7 +277,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_post_put_or_delete_requests()
     {
@@ -304,7 +295,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_if_bypass_cookie_is_set()
     {
@@ -317,7 +307,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_if_bypass_is_in_query_string()
     {
@@ -330,7 +319,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_an_excluded_uri()
     {
@@ -348,7 +336,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_when_bypass_uery_string_is_in_url()
     {
@@ -361,7 +348,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_an_excluded_queryString()
     {
@@ -380,7 +366,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_does_not_cache_when_ttl_is_zero()
     {
@@ -398,7 +383,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_be_enabled_and_disabled()
     {
@@ -416,7 +400,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_set_the_cache_control_header()
     {
@@ -429,7 +412,6 @@ class FeatureTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function it_can_set_the_cache_cookie_header()
     {
