@@ -31,6 +31,17 @@ class FeatureTest extends TestCase
     }
 
     /** @test */
+    public function it_can_be_disabled_by_setenabled()
+    {
+        $cache = (new Cache)->setUnitTestMode()
+                            ->setEnabled(false)
+                            ->cache('private', 360, '/test?foo=bar');
+
+        $headers = $this->getHeaders();
+        $this->assertEmpty($headers);
+    }
+
+    /** @test */
     public function it_can_set_the_type()
     {
         $cache = (new Cache)->setUnitTestMode()

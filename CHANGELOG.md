@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1 2019-05-11
+### Changed
+- Fixed bug where shouldCache() did not take getAEnbled() into account
+
 ## 1.3.0 2019-05-05
 ### Added
 - Added ESI support + unit tests + docs

@@ -353,6 +353,11 @@ class Cache
             return false;
         }
 
+        // Do not cache requests if cache is diabled
+        if ($this->getEnabled() == false) {
+            return false;
+        }
+
         // Do not cache requests that have the cache bypass cookie set
         if ($this->getLifetime() == 0) {
             return false;
