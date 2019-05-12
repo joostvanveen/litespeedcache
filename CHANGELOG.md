@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.2 2019-05-12
+### Changed
+- Fixed bug where ajax requests were cached.
+
 ## 1.3.1 2019-05-11
 ### Changed
 - Fixed bug where shouldCache() did not take getAEnbled() into account

@@ -237,7 +237,7 @@ class FeatureTest extends TestCase
     /** @test */
     public function it_does_not_cache_ajax_requests()
     {
-        $_SERVER['X-Requested-With'] = 'XMLHttpRequest';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $cache = (new Cache)->setUnitTestMode()->cache('private', 360, '/test?foo=bar');
 
         $this->assertEquals(0, count($this->getHeaders()));

@@ -343,7 +343,7 @@ class Cache
     public function shouldCache(): bool
     {
         // Do not cache ajax requests
-        if (! empty($_SERVER['X-Requested-With']) && $_SERVER['X-Requested-With'] == 'XMLHttpRequest') {
+        if (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             return false;
         }
 

@@ -1,4 +1,4 @@
-![coverage](https://img.shields.io/badge/coverage-100%25-yellowgreen.svg?cacheSeconds=3600)
+![coverage](https://img.shields.io/badge/coverage-99%25-yellowgreen.svg?cacheSeconds=3600)
 
 # joostvanveen/litespeedcache
 A framework agnostic Litespeed cache library for PHP. Can be used in any PHP application.
