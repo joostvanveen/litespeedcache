@@ -264,7 +264,7 @@ class FeatureTest extends TestCase
     }
 
     /** @test */
-    public function it_caches_get_and_head_requests()
+    public function it_caches_get_and_head_requests_by_default()
     {
         $requestTypes = [
             'GET',
@@ -274,6 +274,23 @@ class FeatureTest extends TestCase
         foreach ($requestTypes as $requestType) {
             $_SERVER['REQUEST_METHOD'] = $requestType;
             $cache = (new Cache)->setUnitTestMode()
+                                ->cache('private', 360, '/test?foo=bar');
+            $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $this->getHeaders()));
+        }
+    }
+
+    /** @test */
+    public function it_can_set_which_request_types_to_cache()
+    {
+        $requestTypes = [
+            'POST',
+            'PUT',
+        ];
+
+        foreach ($requestTypes as $requestType) {
+            $_SERVER['REQUEST_METHOD'] = $requestType;
+            $cache = (new Cache)->setUnitTestMode()
+                                ->setCacheableHttpVerbs($requestTypes)
                                 ->cache('private', 360, '/test?foo=bar');
             $this->assertTrue(in_array('X-LiteSpeed-Cache-Control: private, max-age=360', $this->getHeaders()));
         }

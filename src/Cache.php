@@ -113,6 +113,13 @@ class Cache
     protected $enable_ajax_cache = false;
 
     /**
+     * Which requests types should be cached?
+     *
+     * @var array
+     */
+    protected $cacheable_http_verbs = ['GET', 'HEAD'];
+
+    /**
      * Tags to attach to the current cache.
      *
      * @var array
@@ -355,8 +362,7 @@ class Cache
         }
 
         // Do not cache any other requests than GET or HEAD requests
-        $validMethods = ['GET', 'HEAD'];
-        if (! empty($_SERVER['REQUEST_METHOD']) && ! preg_grep('/' . $_SERVER['REQUEST_METHOD'] . '/i', $validMethods)) {
+        if (! empty($_SERVER['REQUEST_METHOD']) && ! preg_grep('/' . $_SERVER['REQUEST_METHOD'] . '/i', $this->getCacheableHttpVerbs())) {
             return false;
         }
 
@@ -584,6 +590,26 @@ class Cache
     public function setEnableAjaxCache(bool $enable_ajax_cache): Cache
     {
         $this->enable_ajax_cache = $enable_ajax_cache;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCacheableHttpVerbs(): array
+    {
+        return $this->cacheable_http_verbs;
+    }
+
+    /**
+     * @param array $cacheable_http_verbs
+     *
+     * @return Cache
+     */
+    public function setCacheableHttpVerbs(array $cacheable_http_verbs): Cache
+    {
+        $this->cacheable_http_verbs = $cacheable_http_verbs;
 
         return $this;
     }
