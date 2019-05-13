@@ -235,12 +235,32 @@ class FeatureTest extends TestCase
     }
 
     /** @test */
-    public function it_does_not_cache_ajax_requests()
+    public function it_does_not_cache_ajax_requests_by_default()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $cache = (new Cache)->setUnitTestMode()->cache('private', 360, '/test?foo=bar');
 
         $this->assertEquals(0, count($this->getHeaders()));
+    }
+
+    /** @test */
+    public function it_caches_ajax_requests_by_configuration()
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $cache = (new Cache)->setUnitTestMode()->setEnableAjaxCache(true)->cache('private', 360, '/test?foo=bar');
+
+        $headers = $this->getHeaders();
+        $this->assertEquals(1, count($headers));
+    }
+
+    /** @test */
+    public function it_does_not_cache_ajax_requests_by_configuration()
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $cache = (new Cache)->setUnitTestMode()->setEnableAjaxCache(false)->cache('private', 360, '/test?foo=bar');
+
+        $headers = $this->getHeaders();
+        $this->assertEquals(0, count($headers));
     }
 
     /** @test */

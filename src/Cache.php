@@ -106,6 +106,13 @@ class Cache
     protected $queryString = '';
 
     /**
+     * Should ajax requests be cacheable?
+     *
+     * @var bool
+     */
+    protected $enable_ajax_cache = false;
+
+    /**
      * Tags to attach to the current cache.
      *
      * @var array
@@ -343,7 +350,7 @@ class Cache
     public function shouldCache(): bool
     {
         // Do not cache ajax requests
-        if (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        if (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' && $this->getEnableAjaxCache() === false) {
             return false;
         }
 
@@ -559,6 +566,26 @@ class Cache
 
         $this->uri = isset($urlData['path']) ? $urlData['path'] : '';
         $this->queryString = isset($urlData['query']) ? $urlData['query'] : '';
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnableAjaxCache(): bool
+    {
+        return $this->enable_ajax_cache;
+    }
+
+    /**
+     * @param bool $enable_ajax_cache
+     *
+     * @return Cache
+     */
+    public function setEnableAjaxCache(bool $enable_ajax_cache): Cache
+    {
+        $this->enable_ajax_cache = $enable_ajax_cache;
+
+        return $this;
     }
 
     /**
