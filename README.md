@@ -104,6 +104,19 @@ $excludedUris = [
 (new \Joostvanveen\Litespeedcache\Cache)->setExcludedUrls($excludedUris)->cache('public', 120);
 ```
 
+### Caching ajax requests
+By default, ajax requests are not cached. But you can set this the following way:
+```php
+(new Cache)->setEnableAjaxCache(true)->cache();
+```
+
+### Caching HTTP request methods
+By default, only GET and HEAD requests are cached. But you can set this the following way:
+```php
+$requestTypes = ['GET', 'HEAD', 'POST', 'PUT'];
+(new Cache)->setCacheableHttpVerbs($requestTypes)->cache();
+```
+
 ### Excluding query string from cache 
 A query string consists of the parameters added to a URL after the question mark. In `https://example.com/foo?bar=baz`, the query string is `bar=baz`
 

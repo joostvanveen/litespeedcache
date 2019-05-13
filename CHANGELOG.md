@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 2019-05-13
+### Added
+- Made caching of http verbs configurable
+- Made caching of ajax calls configurable
+
 ## 1.3.2 2019-05-12
 ### Changed
 - Fixed bug where ajax requests were cached.
